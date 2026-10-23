@@ -1,0 +1,7 @@
+{
+  "name": "listmonk",
+  "dockerComposeFile": "../dev/docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/app",
+  "forwardPorts": [9000]
+}

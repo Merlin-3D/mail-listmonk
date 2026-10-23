@@ -1,0 +1,67 @@
+services:
+  adminer:
+    image: adminer:4.8.1-standalone
+    restart: always
+    ports:
+      - "127.0.0.1:8070:8080"
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    # Share 'localhost' with the dev container.
+    network_mode: "service:dev"
+
+  db:
+    image: postgres:18
+    environment:
+      - POSTGRES_PASSWORD=listmonk-dev
+      - POSTGRES_USER=listmonk-dev
+      - POSTGRES_DB=listmonk-dev
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    volumes:
+      - type: volume
+        source: listmonk-dev-db
+        target: /var/lib/postgresql
+
+  dev:
+    build:
+      context: ../
+      dockerfile: dev/app.Dockerfile
+    init: true
+    environment:
+      DEV_CONFIG: dev/config.toml
+      LISTMONK_db__host: db
+      LISTMONK_db__user: listmonk-dev
+      LISTMONK_db__password: listmonk-dev
+      LISTMONK_db__database: listmonk-dev
+      MAILHOG_EXTERNAL: "1"
+      MAILHOG_URL: http://localhost:8025
+      MAILHOG_SMTP_HOST: localhost
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:1025:1025" # MailHog SMTP
+      - "127.0.0.1:8025:8025" # MailHog UI
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ../:/app
+      - go-mod:/go/pkg/mod
+      - go-build:/root/.cache/go-build
+      - admin-dist:/app/static/admin/dist
+      - type: volume
+        source: node-modules
+        target: /app/static/admin/node_modules
+        volume:
+          nocopy: true
+
+volumes:
+  listmonk-dev-db:
+  go-mod:
+  go-build:
+  admin-dist:
+  node-modules:

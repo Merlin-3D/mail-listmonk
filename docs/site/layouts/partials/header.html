@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>{{ .Title }}</title>
+  <meta name="description" content="{{with .Description }}{{ . }}{{else}}Send e-mail campaigns and transactional e-mails. High performance and features packed into one app.{{end}}" />
+  <meta name="keywords" content="{{ if .Keywords }}{{ range .Keywords }}{{ . }}, {{ end }}{{else if isset .Params "tags" }}{{ range .Params.tags }}{{ . }}, {{ end }}{{end}}">
+  <link rel="canonical" href="{{ .Permalink }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Clarity+City:ital,wght@0,100..900;1,100..900&family=Geist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/@knadh/oat/oat.min.css">
+  <link href="{{ .Site.BaseURL }}static/style.css" rel="stylesheet" type="text/css" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+  <link rel="icon" href="{{ .Site.BaseURL }}static/images/favicon.webp" type="image/webp" />
+
+  <meta property="og:title" content="{{ .Title }}" />
+  {{ if .Params.thumbnail }}
+    <link rel="image_src" href="{{ .Site.BaseURL }}static/images/{{ .Params.thumbnail }}" />
+    <meta property="og:image" content="{{ .Site.BaseURL }}static/images/{{ .Params.thumbnail }}" />
+  {{ else }}
+    <link rel="image_src" href="{{ .Site.BaseURL }}static/images/thumbnail.webp" />
+    <meta property="og:image" content="{{ .Site.BaseURL }}static/images/thumbnail.webp" />
+  {{ end }}
+</head>
+<body>
+<nav data-topnav>
+  <div class="container hstack justify-between">
+    <a href="{{ .Site.BaseURL }}" aria-label="listmonk home"><img src="{{ .Site.BaseURL }}static/images/logo.svg" alt="listmonk" width="130" height="24" /></a>
+    <div class="hstack gap-6">
+      <a href="/#download">Download</a>
+      <a href="/#hosting">Hosting</a>
+      <a href="/docs">Docs</a>
+      <span class="github-btn"><a class="github-button" href="https://github.com/knadh/listmonk" data-size="large" data-show-count="true" aria-label="knadh/listmonk on GitHub">GitHub</a></span>
+    </div>
+  </div>
+</nav>

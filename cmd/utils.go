@@ -1,0 +1,217 @@
+package main
+
+import (
+	"crypto/rand"
+	"fmt"
+	"net/url"
+	"path/filepath"
+	"regexp"
+	"slices"
+	"strconv"
+	"strings"
+	"time"
+)
+
+var (
+	regexpSpaces = regexp.MustCompile(`[\s]+`)
+)
+
+// inArray checks if a string is present in a list of strings.
+func inArray(val string, vals []string) (ok bool) {
+	return slices.Contains(vals, val)
+}
+
+// makeFilename sanitizes a filename (user supplied upload filenames).
+func makeFilename(fName string) string {
+	name := strings.TrimSpace(fName)
+	if name == "" {
+		name, _ = generateRandomString(10)
+	}
+	// replace whitespace with "-"
+	name = regexpSpaces.ReplaceAllString(name, "-")
+	return filepath.Base(name)
+}
+
+// appendSuffixToFilename adds a string suffix to the filename while keeping the file extension.
+func appendSuffixToFilename(filename, suffix string) string {
+	ext := filepath.Ext(filename)
+	name := strings.TrimSuffix(filename, ext)
+	return fmt.Sprintf("%s_%s%s", name, suffix, ext)
+}
+
+// makeMsgTpl takes a page title, heading, and message and returns
+// a msgTpl that can be rendered as an HTML view. This is used for
+// rendering arbitrary HTML views with error and success messages.
+func makeMsgTpl(pageTitle, heading, msg string) msgTpl {
+	if heading == "" {
+		heading = pageTitle
+	}
+	err := msgTpl{}
+	err.Title = pageTitle
+	err.MessageTitle = heading
+	err.Message = msg
+	return err
+}
+
+// parseStringIDs takes a slice of numeric string IDs and
+// parses each number into an int64 and returns a slice of the
+// resultant values.
+func parseStringIDs(s []string) ([]int, error) {
+	vals := make([]int, 0, len(s))
+	for _, v := range s {
+		i, err := strconv.Atoi(v)
+		if err != nil {
+			return nil, err
+		}
+
+		if i < 1 {
+			return nil, fmt.Errorf("%d is not a valid ID", i)
+		}
+
+		vals = append(vals, i)
+	}
+
+	return vals, nil
+}
+
+// generateRandomString generates a cryptographically random, alphanumeric string of length n.
+func generateRandomString(n int) (string, error) {
+	const dictionary = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	var bytes = make([]byte, n)
+
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+	for k, v := range bytes {
+		bytes[k] = dictionary[v%byte(len(dictionary))]
+	}
+
+	return string(bytes), nil
+}
+
+// strHasLen checks if the given string has a length within min-max.
+func strHasLen(str string, min, max int) bool {
+	return len(str) >= min && len(str) <= max
+}
+
+// getQueryInts parses the list of given query param values into ints.
+func getQueryInts(param string, qp url.Values) ([]int, error) {
+	var out []int
+	if vals, ok := qp[param]; ok {
+		for _, v := range vals {
+			if v == "" {
+				continue
+			}
+
+			listID, err := strconv.Atoi(v)
+			if err != nil {
+				return nil, err
+			}
+			out = append(out, listID)
+		}
+	}
+
+	return out, nil
+}
+
+// makeQuery takes a url.Values and a list of default key-value pairs, and returns a new url.Values with the defaults applied.
+// Any key that is not in defaults (removes unknown keys coming from the frontend) is filtered out.
+// Any key that's there but has an empty value is also filtered out (keeps query params clean without empty values)..
+// This is opinionated specifically for use with models.PageProps{} and its handlers.
+func makeQuery(q url.Values, defaults map[string]string) url.Values {
+	out := make(url.Values)
+
+	// Set the defaults first.
+	for key, def := range defaults {
+		if def != "" {
+			out.Set(key, def)
+		}
+	}
+
+	// Non-empty values in incoming params override the defaults.
+	for key, vals := range q {
+		if _, ok := defaults[key]; !ok {
+			continue
+		}
+
+		next := make([]string, 0, len(vals))
+		for _, val := range vals {
+			if val := strings.TrimSpace(val); val != "" {
+				next = append(next, val)
+			}
+		}
+		if len(next) > 0 {
+			out[key] = next
+		}
+	}
+
+	// Common across many handlers for arbitary queries.
+	search := strings.TrimSpace(out.Get("search"))
+	if search != "" {
+		out.Set("search", search)
+	}
+	query := strings.TrimSpace(out.Get("query"))
+	if query != "" {
+		out.Set("query", query)
+	}
+
+	return out
+}
+
+// compactDate, given a date, omits the current year and returns a date/time string.
+func compactDate(t, now time.Time, withTime bool, omitYear ...bool) string {
+	t = t.In(now.Location())
+	layout := "Mon, 2 Jan"
+	if t.Year() != now.Year() && !(len(omitYear) > 0 && omitYear[0]) {
+		layout += " 2006"
+	}
+	if withTime {
+		layout += ", 15:04"
+	}
+	return t.Format(layout)
+}
+
+// formatTimestamps takes 2 timestamps and returns an A - B formatted date
+// omitting shared components (same month etc.).
+func formatTimestamps(from, to, now time.Time) string {
+	from, to = from.In(now.Location()), to.In(now.Location())
+	if from.IsZero() || to.IsZero() || to.Before(from) {
+		return ""
+	}
+
+	endLayout := "Mon 02 Jan 2006"
+	if from.Year() == to.Year() && from.YearDay() == to.YearDay() {
+		return from.Format("15:04") + " - " + to.Format("15:04") + "\n" + to.Format(endLayout)
+	}
+
+	startLayout := "Mon 02"
+	if from.Month() != to.Month() || from.Year() != to.Year() {
+		startLayout += " Jan"
+	}
+	if from.Year() != to.Year() && from.Year() != now.Year() {
+		startLayout += " 2006"
+	}
+	return from.Format(startLayout) + " - " + to.Format(endLayout)
+}
+
+// parseDateTime parses datetime formats.
+func parseDateTime(s string) (time.Time, bool) {
+	if s == "" {
+		return time.Time{}, false
+	}
+
+	var layout string
+	switch len(s) {
+	case 10:
+		layout = "2006-01-02"
+	case 16:
+		layout = "2006-01-02T15:04"
+	case 19:
+		layout = "2006-01-02T15:04:05"
+	default:
+		return time.Time{}, false
+	}
+	t, err := time.ParseInLocation(layout, s, time.Local)
+
+	return t, err == nil
+}
