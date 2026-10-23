@@ -68,10 +68,10 @@ func V0_7_0(db *sqlx.DB, fs stuffbin.FileSystem, ko *koanf.Koanf, lo *log.Logger
 	
 	-- Insert default settings if the table is empty.
 	INSERT INTO settings (key, value) SELECT k, v::JSONB FROM (VALUES
-		('app.root_url', '"http://localhost:9000"'),
+		('app.root_url', '"http://localhost:10001"'),
 		('app.favicon_url', '""'),
 		('app.from_email', '"listmonk <noreply@listmonk.yoursite.com>"'),
-		('app.logo_url', '"http://localhost:9000/public/static/logo.png"'),
+		('app.logo_url', '"http://localhost:10001/public/static/logo.png"'),
 		('app.concurrency', '10'),
 		('app.message_rate', '10'),
 		('app.batch_size', '1000'),

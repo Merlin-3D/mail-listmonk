@@ -3,32 +3,35 @@
 All features that are available on the listmonk dashboard are also available as REST-like HTTP APIs that can be interacted with directly. Request and response bodies are JSON. This allows easy scripting of listmonk and integration with other systems, for instance, synchronisation with external subscriber databases.
 
 !!! note
-    If you come across API calls that are yet to be documented, please consider contributing to docs.
-
+If you come across API calls that are yet to be documented, please consider contributing to docs.
 
 ## Auth
+
 HTTP API requests support BasicAuth and a Authorization `token` headers. API users and tokens with the required permissions can be created and managed on the admin UI (Admin -> Users).
 
 ##### BasicAuth example
+
 ```shell
-curl -u "api_user:token" http://localhost:9000/api/lists
+curl -u "api_user:token" http://localhost:10001/api/lists
 ```
 
 ##### Authorization token example
+
 ```shell
-curl -H "Authorization: token api_user:token" http://localhost:9000/api/lists
+curl -H "Authorization: token api_user:token" http://localhost:10001/api/lists
 ```
 
 ## Permissions
-**User role**: Permissions allowed for a user are defined as a *User role* (Admin -> User roles) and then attached to a user. 
 
-**List role**: Read / write permissions per-list can be defined as a *List role* (Admin -> User roles) and then attached to a user. 
+**User role**: Permissions allowed for a user are defined as a _User role_ (Admin -> User roles) and then attached to a user.
 
-In a *User role*, `lists:get_all` or `lists:manage_all` permission supercede and override any list specific permissions for a user defined in a *List role*.
+**List role**: Read / write permissions per-list can be defined as a _List role_ (Admin -> User roles) and then attached to a user.
+
+In a _User role_, `lists:get_all` or `lists:manage_all` permission supercede and override any list specific permissions for a user defined in a _List role_.
 
 To manage lists and subscriber list subscriptions via API requests, ensure that the appropriate permissions are attached to the API user.
 
-______________________________________________________________________
+---
 
 ## Response structure
 
@@ -64,22 +67,20 @@ All timestamp fields are in the format `2019-01-01T09:00:00.000000+05:30`. The s
 
 ### Common HTTP error codes
 
-| Code  |                                                                             |
-| ----- | ----------------------------------------------------------------------------|
-|  400  | Missing or bad request parameters or values                                 |
-|  403  | Session expired or invalidate. Must relogin                                 |
-|  404  | Request resource was not found                                              |
-|  405  | Request method (GET, POST etc.) is not allowed on the requested endpoint    |
-|  410  | The requested resource is gone permanently                                  |
-|  422  | Unprocessable entity. Unable to process request as it contains invalid data |
-|  429  | Too many requests to the API (rate limiting)                                |
-|  500  | Something unexpected went wrong                                             |
-|  502  | The backend OMS is down and the API is unable to communicate with it        |
-|  503  | Service unavailable; the API is down                                        |
-|  504  | Gateway timeout; the API is unreachable                                     |
-
+| Code |                                                                             |
+| ---- | --------------------------------------------------------------------------- |
+| 400  | Missing or bad request parameters or values                                 |
+| 403  | Session expired or invalidate. Must relogin                                 |
+| 404  | Request resource was not found                                              |
+| 405  | Request method (GET, POST etc.) is not allowed on the requested endpoint    |
+| 410  | The requested resource is gone permanently                                  |
+| 422  | Unprocessable entity. Unable to process request as it contains invalid data |
+| 429  | Too many requests to the API (rate limiting)                                |
+| 500  | Something unexpected went wrong                                             |
+| 502  | The backend OMS is down and the API is unable to communicate with it        |
+| 503  | Service unavailable; the API is down                                        |
+| 504  | Gateway timeout; the API is unreachable                                     |
 
 ## OpenAPI (Swagger) spec
 
 The auto-generated OpenAPI (Swagger) specification site for the APIs are available at [**listmonk.app/docs/swagger**](https://listmonk.app/docs/swagger/)
-

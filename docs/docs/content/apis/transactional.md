@@ -4,7 +4,7 @@
 | :----- | :------- | :-------------------------- |
 | POST   | /api/tx  | Send transactional messages |
 
-______________________________________________________________________
+---
 
 #### POST /api/tx
 
@@ -41,7 +41,7 @@ The `subscriber_mode` parameter controls how the recipients (subscribers or non-
 ##### Example
 
 ```shell
-curl -u "api_user:token" "http://localhost:9000/api/tx" -X POST \
+curl -u "api_user:token" "http://localhost:10001/api/tx" -X POST \
      -H 'Content-Type: application/json; charset=utf-8' \
      --data-binary @- << EOF
     {
@@ -57,7 +57,7 @@ EOF
 
 ```json
 {
-    "data": true
+  "data": true
 }
 ```
 
@@ -66,7 +66,7 @@ EOF
 Send to arbitrary email addresses without requiring them to be subscribers:
 
 ```shell
-curl -u "api_user:token" "http://localhost:9000/api/tx" -X POST \
+curl -u "api_user:token" "http://localhost:10001/api/tx" -X POST \
      -H 'Content-Type: application/json; charset=utf-8' \
      --data-binary @- << EOF
     {
@@ -81,14 +81,14 @@ EOF
 
 In the template, use `{{ .Tx.Data.name }}`, `{{ .Tx.Data.order_id }}`, etc. to access the data.
 
-______________________________________________________________________
+---
 
 #### File Attachments
 
 To include file attachments in a transactional message, use the `multipart/form-data` Content-Type. Use `data` param for the parameters described above as a JSON object. Include any number of attachments via the `file` param.
 
 ```shell
-curl -u "api_user:token" "http://localhost:9000/api/tx" -X POST \
+curl -u "api_user:token" "http://localhost:10001/api/tx" -X POST \
 -F 'data=\"{
     \"subscriber_email\": \"user@test.com\",
     \"template_id\": 4

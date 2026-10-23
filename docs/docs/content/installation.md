@@ -3,17 +3,17 @@
 listmonk is a simple binary application that requires a Postgres database instance to run. The binary can be downloaded and run manually, or it can be run as a container with Docker compose.
 
 ## Binary
+
 1. Download the [latest release](https://github.com/knadh/listmonk/releases) and extract the listmonk binary. `amd64` is the main one. It works for Intel and x86 CPUs.
 1. `./listmonk --new-config` to generate config.toml. Edit the file.
 1. `./listmonk --install` to install the tables in the Postgres DB (⩾ 12).
-1. Run `./listmonk` and visit `http://localhost:9000` to create the Super Admin user and login.
+1. Run `./listmonk` and visit `http://localhost:10001` to create the Super Admin user and login.
 
 !!! Tip
-    To set the Super Admin username and password during installation, set the environment variables:
-    `LISTMONK_ADMIN_USER=myuser LISTMONK_ADMIN_PASSWORD=xxxxx ./listmonk --install`
+To set the Super Admin username and password during installation, set the environment variables:
+`LISTMONK_ADMIN_USER=myuser LISTMONK_ADMIN_PASSWORD=xxxxx ./listmonk --install`
 
     To also create a Super Admin API user, for automation, add `LISTMONK_ADMIN_API_USER=myapiuser`. Its API token is written to stderr as `export LISTMONK_ADMIN_API_TOKEN="..."`.
-
 
 ## Docker
 
@@ -32,14 +32,14 @@ curl -LO https://github.com/knadh/listmonk/raw/master/docker-compose.yml
 docker compose up -d
 ```
 
-Then, visit `http://localhost:9000` to create the Super Admin user and login.
+Then, visit `http://localhost:10001` to create the Super Admin user and login.
 
 !!! Tip
-    To set the Super Admin username and password during setup, set the environment variables (only the first time):
-    `LISTMONK_ADMIN_USER=myuser LISTMONK_ADMIN_PASSWORD=xxxxx docker compose up -d`
-
+To set the Super Admin username and password during setup, set the environment variables (only the first time):
+`LISTMONK_ADMIN_USER=myuser LISTMONK_ADMIN_PASSWORD=xxxxx docker compose up -d`
 
 ### Mounting a custom config.toml
+
 The docker-compose file includes all necessary listmonk configuration as environment variables, `LISTMONK_*`.
 If you would like to remove those and mount a config.toml instead:
 
@@ -47,7 +47,7 @@ If you would like to remove those and mount a config.toml instead:
 
 ```toml
 [app]
-address = "0.0.0.0:9000"
+address = "0.0.0.0:10001"
 
 # Database.
 [db]
@@ -74,21 +74,25 @@ max_lifetime = "300s"
 #### 3. Change the `--config ''` flags in the `command:` section to point to the path
 
 ```yaml
-command: [sh, -c, "./listmonk --install --idempotent --yes --config /listmonk/config.toml && ./listmonk --upgrade --yes --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml"]
+command:
+  [
+    sh,
+    -c,
+    "./listmonk --install --idempotent --yes --config /listmonk/config.toml && ./listmonk --upgrade --yes --config /listmonk/config.toml && ./listmonk --config /listmonk/config.toml",
+  ]
 ```
 
------------
+---
 
 ## Nightly
 
 !!! Warning
-    Nightly releases are untested and may have bugs. Use at your own risk. Always take a backup of your Postgres database before using a nightly release.
+Nightly releases are untested and may have bugs. Use at your own risk. Always take a backup of your Postgres database before using a nightly release.
 
 A nightly build is automatically published with the latest changes merged to the repository. If you want to access the latest changes without waiting for versioned releases, you can obtain the nightly builds and follow the same instructions above.
 
 - **Docker**: `listmonk/listmonk:nightly` (use this as the image name in the docker-compose file)
 - **Binary**: [Download nightly release](https://github.com/knadh/listmonk/releases/nightly)
-
 
 ## Compiling from source
 
@@ -97,7 +101,6 @@ To compile the latest unreleased version (`master` branch):
 1. Make sure `go` and `bun` are installed on your system.
 2. `git clone git@github.com:knadh/listmonk.git`
 3. `cd listmonk && make dist`. This will build the SSR admin frontend and generate the `listmonk` binary.
-
 
 ## Helm chart for Kubernetes
 
@@ -139,17 +142,18 @@ $ helm upgrade \
 <a href="https://podway.io/start?app=listmonk&ref=docs-listmonk"><img src="https://podway.io/img/deploy-on-podway.svg" alt="Deploy on podway" style="max-width: 150px;"/></a>
 
 ## Tutorials
-* [Listmonk with Forward Email for Secure Newsletter Delivery](https://forwardemail.net/en/guides/newsletter-with-listmonk)
-* [Informal step-by-step on how to get started with listmonk using *Railway*](https://github.com/knadh/listmonk/issues/120#issuecomment-1421838533)
-* [Step-by-step tutorial for installation and all basic functions. *Amazon EC2, SES, docker & binary*](https://gist.github.com/MaximilianKohler/e5158fcfe6de80a9069926a67afcae11)
-* [Step-by-step guide on how to install and set up listmonk on *AWS Lightsail with docker* (rameerez)](https://github.com/knadh/listmonk/issues/1208)
-* [Quick setup on any cloud server using *docker and caddy*](https://github.com/samyogdhital/listmonk-caddy-reverse-proxy)
-* [*Binary* install on Ubuntu 22.04 as a service](https://mumaritc.hashnode.dev/how-to-install-listmonk-using-binary-on-ubuntu-2204)
-* [*Binary* install on Ubuntu 18.04 as a service (Apache & Plesk)](https://devgypsy.com/post/2020-08-18-installing-listmonk-newsletter-manager/)
-* [*Binary and docker* on linux (techviewleo)](https://techviewleo.com/manage-mailing-list-and-newsletter-using-listmonk/)
-* [*Binary* install on your PC](https://www.youtube.com/watch?v=fAOBqgR9Yfo). Discussions of limitations: [[1](https://github.com/knadh/listmonk/issues/862#issuecomment-1307328228)][[2](https://github.com/knadh/listmonk/issues/248#issuecomment-1320806990)].
-* [*Docker on Rocky Linux 8* (nginx, Let's Encrypt SSL)](https://wiki.crowncloud.net/?How_to_Install_Listmonk_with_Docker_on_Rocky_Linux_8)
-* [*Docker* with nginx reverse proxy, certbot SSL, and Gmail SMTP](https://www.maketecheasier.com/create-own-newsletter-with-listmonk/)
-* [Install Listmonk on Self-hosting with *Pre-Configured AMI Package at AWS* by Single Click](https://meetrix.io/articles/how-to-install-llama-2-on-aws-with-pre-configured-ami-package/)
-* [*Fly.io* working example](https://gitlab.com/votelog/apps/newsletter)
-* [*Docker via Ansible* with the MASH playbook](https://github.com/mother-of-all-self-hosting/mash-playbook/blob/main/docs/services/listmonk.md)
+
+- [Listmonk with Forward Email for Secure Newsletter Delivery](https://forwardemail.net/en/guides/newsletter-with-listmonk)
+- [Informal step-by-step on how to get started with listmonk using _Railway_](https://github.com/knadh/listmonk/issues/120#issuecomment-1421838533)
+- [Step-by-step tutorial for installation and all basic functions. _Amazon EC2, SES, docker & binary_](https://gist.github.com/MaximilianKohler/e5158fcfe6de80a9069926a67afcae11)
+- [Step-by-step guide on how to install and set up listmonk on _AWS Lightsail with docker_ (rameerez)](https://github.com/knadh/listmonk/issues/1208)
+- [Quick setup on any cloud server using _docker and caddy_](https://github.com/samyogdhital/listmonk-caddy-reverse-proxy)
+- [_Binary_ install on Ubuntu 22.04 as a service](https://mumaritc.hashnode.dev/how-to-install-listmonk-using-binary-on-ubuntu-2204)
+- [_Binary_ install on Ubuntu 18.04 as a service (Apache & Plesk)](https://devgypsy.com/post/2020-08-18-installing-listmonk-newsletter-manager/)
+- [_Binary and docker_ on linux (techviewleo)](https://techviewleo.com/manage-mailing-list-and-newsletter-using-listmonk/)
+- [_Binary_ install on your PC](https://www.youtube.com/watch?v=fAOBqgR9Yfo). Discussions of limitations: [[1](https://github.com/knadh/listmonk/issues/862#issuecomment-1307328228)][[2](https://github.com/knadh/listmonk/issues/248#issuecomment-1320806990)].
+- [_Docker on Rocky Linux 8_ (nginx, Let's Encrypt SSL)](https://wiki.crowncloud.net/?How_to_Install_Listmonk_with_Docker_on_Rocky_Linux_8)
+- [_Docker_ with nginx reverse proxy, certbot SSL, and Gmail SMTP](https://www.maketecheasier.com/create-own-newsletter-with-listmonk/)
+- [Install Listmonk on Self-hosting with _Pre-Configured AMI Package at AWS_ by Single Click](https://meetrix.io/articles/how-to-install-llama-2-on-aws-with-pre-configured-ami-package/)
+- [_Fly.io_ working example](https://gitlab.com/votelog/apps/newsletter)
+- [_Docker via Ansible_ with the MASH playbook](https://github.com/mother-of-all-self-hosting/mash-playbook/blob/main/docs/services/listmonk.md)

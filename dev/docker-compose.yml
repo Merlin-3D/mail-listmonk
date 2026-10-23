@@ -18,7 +18,11 @@ services:
       - POSTGRES_DB=listmonk-dev
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -h 127.0.0.1 -U $$POSTGRES_USER -d $$POSTGRES_DB",
+        ]
       interval: 2s
       timeout: 5s
       retries: 30
@@ -42,7 +46,7 @@ services:
       MAILHOG_URL: http://localhost:8025
       MAILHOG_SMTP_HOST: localhost
     ports:
-      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:10001:10001"
       - "127.0.0.1:1025:1025" # MailHog SMTP
       - "127.0.0.1:8025:8025" # MailHog UI
     depends_on:

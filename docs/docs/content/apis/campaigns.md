@@ -6,7 +6,7 @@
 | GET    | [/api/campaigns/{campaign_id}](#get-apicampaignscampaign_id)                | Retrieve a specific campaign.             |
 | GET    | [/api/campaigns/{campaign_id}/preview](#get-apicampaignscampaign_idpreview) | Retrieve preview of a campaign.           |
 | GET    | [/api/campaigns/running/stats](#get-apicampaignsrunningstats)               | Retrieve stats of specified campaigns.    |
-| GET    | [/api/campaigns/analytics/{type}](#get-apicampaignsanalyticstype)           | Retrieve view counts for a  campaign.     |
+| GET    | [/api/campaigns/analytics/{type}](#get-apicampaignsanalyticstype)           | Retrieve view counts for a campaign.      |
 | POST   | [/api/campaigns](#post-apicampaigns)                                        | Create a new campaign.                    |
 | POST   | [/api/campaigns/{campaign_id}/test](#post-apicampaignscampaign_idtest)      | Test campaign with arbitrary subscribers. |
 | PUT    | [/api/campaigns/{campaign_id}](#put-apicampaignscampaign_id)                | Update a campaign.                        |
@@ -15,7 +15,7 @@
 | DELETE | [/api/campaigns/{campaign_id}](#delete-apicampaignscampaign_id)             | Delete a campaign.                        |
 | DELETE | [/api/campaigns](#delete-apicampaigns)                                      | Delete multiple campaigns.                |
 
-____________________________________________________________________________________________________________________________________
+---
 
 #### GET /api/campaigns
 
@@ -24,69 +24,67 @@ Retrieve all campaigns.
 ##### Example Request
 
 ```shell
- curl -u "api_user:token" -X GET 'http://localhost:9000/api/campaigns?page=1&per_page=100'
+ curl -u "api_user:token" -X GET 'http://localhost:10001/api/campaigns?page=1&per_page=100'
 ```
 
 ##### Parameters
 
-| Name     | Type     | Required | Description                                                              |
-| :------- | :------- | :------- | :----------------------------------------------------------------------- |
-| order    | string   |          | Sorting order: ASC for ascending, DESC for descending.                   |
+| Name     | Type     | Required | Description                                                                               |
+| :------- | :------- | :------- | :---------------------------------------------------------------------------------------- |
+| order    | string   |          | Sorting order: ASC for ascending, DESC for descending.                                    |
 | order_by | string   |          | Result sorting field. Options: name, status, created_at, updated_at, started_at, send_at. |
-| query    | string   |          | String to filtter by campaign name and subject (fulltext and substring). |
-| status   | []string |          | Status to filter campaigns. Repeat in the query for multiple values.     |
-| tags     | []string |          | Tags to filter campaigns. Repeat in the query for multiple values.       |
-| page     | number   |          | Page number for paginated results.                                       |
-| per_page | number   |          | Results per page. Set as 'all' for all results.                          |
-| no_body  | boolean  |          | When set to true, returns response without body content.                 |
+| query    | string   |          | String to filtter by campaign name and subject (fulltext and substring).                  |
+| status   | []string |          | Status to filter campaigns. Repeat in the query for multiple values.                      |
+| tags     | []string |          | Tags to filter campaigns. Repeat in the query for multiple values.                        |
+| page     | number   |          | Page number for paginated results.                                                        |
+| per_page | number   |          | Results per page. Set as 'all' for all results.                                           |
+| no_body  | boolean  |          | When set to true, returns response without body content.                                  |
 
 ##### Example Response
 
 ```json
 {
-    "data": {
-        "results": [
-            {
-                "id": 1,
-                "created_at": "2020-03-14T17:36:41.29451+01:00",
-                "updated_at": "2020-03-14T17:36:41.29451+01:00",
-                "views": 0,
-                "clicks": 0,
-                "lists": [
-                    {
-                        "id": 1,
-                        "name": "Default list"
-                    }
-                ],
-                "started_at": null,
-                "to_send": 0,
-                "sent": 0,
-                "uuid": "57702beb-6fae-4355-a324-c2fd5b59a549",
-                "type": "regular",
-                "name": "Test campaign",
-                "subject": "Welcome to listmonk",
-                "from_email": "No Reply <noreply@yoursite.com>",
-                "body": "<h3>Hi {{ .Subscriber.FirstName }}!</h3>\n\t\t\tThis is a test e-mail campaign. Your second name is {{ .Subscriber.LastName }} and you are from {{ .Subscriber.Attribs.city }}.",
-                "body_source": null,
-                "send_at": "2020-03-15T17:36:41.293233+01:00",
-                "status": "draft",
-                "content_type": "richtext",
-                "tags": [
-                    "test-campaign"
-                ],
-                "template_id": 1,
-                "messenger": "email"
-            }
+  "data": {
+    "results": [
+      {
+        "id": 1,
+        "created_at": "2020-03-14T17:36:41.29451+01:00",
+        "updated_at": "2020-03-14T17:36:41.29451+01:00",
+        "views": 0,
+        "clicks": 0,
+        "lists": [
+          {
+            "id": 1,
+            "name": "Default list"
+          }
         ],
-        "query": "",
-        "total": 1,
-        "per_page": 20,
-        "page": 1
-    }
+        "started_at": null,
+        "to_send": 0,
+        "sent": 0,
+        "uuid": "57702beb-6fae-4355-a324-c2fd5b59a549",
+        "type": "regular",
+        "name": "Test campaign",
+        "subject": "Welcome to listmonk",
+        "from_email": "No Reply <noreply@yoursite.com>",
+        "body": "<h3>Hi {{ .Subscriber.FirstName }}!</h3>\n\t\t\tThis is a test e-mail campaign. Your second name is {{ .Subscriber.LastName }} and you are from {{ .Subscriber.Attribs.city }}.",
+        "body_source": null,
+        "send_at": "2020-03-15T17:36:41.293233+01:00",
+        "status": "draft",
+        "content_type": "richtext",
+        "tags": ["test-campaign"],
+        "template_id": 1,
+        "messenger": "email"
+      }
+    ],
+    "query": "",
+    "total": 1,
+    "per_page": 20,
+    "page": 1
+  }
 }
 ```
 
-______________________________________________________________________
+---
 
 #### GET /api/campaigns/{campaign_id}
 
@@ -102,48 +100,46 @@ Retrieve a specific campaign.
 ##### Example Request
 
 ```shell
-curl -u "api_user:token" -X GET 'http://localhost:9000/api/campaigns/1'
+curl -u "api_user:token" -X GET 'http://localhost:10001/api/campaigns/1'
 ```
 
 ##### Example Response
 
 ```json
 {
-    "data": {
+  "data": {
+    "id": 1,
+    "created_at": "2020-03-14T17:36:41.29451+01:00",
+    "updated_at": "2020-03-14T17:36:41.29451+01:00",
+    "views": 0,
+    "clicks": 0,
+    "lists": [
+      {
         "id": 1,
-        "created_at": "2020-03-14T17:36:41.29451+01:00",
-        "updated_at": "2020-03-14T17:36:41.29451+01:00",
-        "views": 0,
-        "clicks": 0,
-        "lists": [
-            {
-                "id": 1,
-                "name": "Default list"
-            }
-        ],
-        "started_at": null,
-        "to_send": 0,
-        "sent": 0,
-        "uuid": "57702beb-6fae-4355-a324-c2fd5b59a549",
-        "type": "regular",
-        "name": "Test campaign",
-        "subject": "Welcome to listmonk",
-        "from_email": "No Reply <noreply@yoursite.com>",
-        "body": "<h3>Hi {{ .Subscriber.FirstName }}!</h3>\n\t\t\tThis is a test e-mail campaign. Your second name is {{ .Subscriber.LastName }} and you are from {{ .Subscriber.Attribs.city }}.",
-        "body_source": null,
-        "send_at": "2020-03-15T17:36:41.293233+01:00",
-        "status": "draft",
-        "content_type": "richtext",
-        "tags": [
-            "test-campaign"
-        ],
-        "template_id": 1,
-        "messenger": "email"
-    }
+        "name": "Default list"
+      }
+    ],
+    "started_at": null,
+    "to_send": 0,
+    "sent": 0,
+    "uuid": "57702beb-6fae-4355-a324-c2fd5b59a549",
+    "type": "regular",
+    "name": "Test campaign",
+    "subject": "Welcome to listmonk",
+    "from_email": "No Reply <noreply@yoursite.com>",
+    "body": "<h3>Hi {{ .Subscriber.FirstName }}!</h3>\n\t\t\tThis is a test e-mail campaign. Your second name is {{ .Subscriber.LastName }} and you are from {{ .Subscriber.Attribs.city }}.",
+    "body_source": null,
+    "send_at": "2020-03-15T17:36:41.293233+01:00",
+    "status": "draft",
+    "content_type": "richtext",
+    "tags": ["test-campaign"],
+    "template_id": 1,
+    "messenger": "email"
+  }
 }
 ```
 
-______________________________________________________________________
+---
 
 #### GET /api/campaigns/{campaign_id}/preview
 
@@ -158,17 +154,18 @@ Preview a specific campaign.
 ##### Example Request
 
 ```shell
-curl -u "api_user:token" -X GET 'http://localhost:9000/api/campaigns/1/preview'
+curl -u "api_user:token" -X GET 'http://localhost:10001/api/campaigns/1/preview'
 ```
 
 ##### Example Response
 
 ```html
 <h3>Hi John!</h3>
-This is a test e-mail campaign. Your second name is Doe and you are from Bengaluru.
+This is a test e-mail campaign. Your second name is Doe and you are from
+Bengaluru.
 ```
 
-______________________________________________________________________
+---
 
 #### GET /api/campaigns/running/stats
 
@@ -183,18 +180,18 @@ Retrieve stats of specified campaigns.
 ##### Example Request
 
 ```shell
-curl -u "api_user:token" -X GET 'http://localhost:9000/api/campaigns/running/stats?campaign_id=1'
+curl -u "api_user:token" -X GET 'http://localhost:10001/api/campaigns/running/stats?campaign_id=1'
 ```
 
 ##### Example Response
 
 ```json
 {
-    "data": []
+  "data": []
 }
 ```
 
-______________________________________________________________________
+---
 
 #### GET /api/campaigns/analytics/{type}
 
@@ -202,19 +199,18 @@ Retrieve stats of specified campaigns.
 
 ##### Parameters
 
-| Name     | Type       | Required | Description                                                        |
-| :------- | :--------- | :------- | :----------------------------------------------------------------- |
-| id       | number\[\] | Yes      | Campaign IDs to get stats for.                                     |
-| type     | string     | Yes      | Analytics type: views, links, clicks, bounces.                     |
-| from     | string     | Yes      | Start value of date range.                                         |
-| to       | string     | Yes      | End value of date range.                                           |
+| Name     | Type       | Required | Description                                                                                              |
+| :------- | :--------- | :------- | :------------------------------------------------------------------------------------------------------- |
+| id       | number\[\] | Yes      | Campaign IDs to get stats for.                                                                           |
+| type     | string     | Yes      | Analytics type: views, links, clicks, bounces.                                                           |
+| from     | string     | Yes      | Start value of date range.                                                                               |
+| to       | string     | Yes      | End value of date range.                                                                                 |
 | interval | string     |          | Interval for views, clicks, and bounces: `hour`, `day`, `week`, or `month`. Default is `day` when empty. |
-
 
 ##### Example Request
 
 ```shell
-curl -u "api_user:token" -X GET 'http://localhost:9000/api/campaigns/analytics/views?id=1&from=2024-08-04&to=2024-08-12'
+curl -u "api_user:token" -X GET 'http://localhost:10001/api/campaigns/analytics/views?id=1&from=2024-08-04&to=2024-08-12'
 ```
 
 ##### Example Response
@@ -254,7 +250,7 @@ curl -u "api_user:token" -X GET 'http://localhost:9000/api/campaigns/analytics/v
 ##### Example Request
 
 ```shell
-curl -u "api_user:token" -X GET 'http://localhost:9000/api/campaigns/analytics/links?id=1&from=2024-08-04T18%3A30%3A00.624Z&to=2024-08-12T18%3A29%3A00.624Z'
+curl -u "api_user:token" -X GET 'http://localhost:10001/api/campaigns/analytics/links?id=1&from=2024-08-04T18%3A30%3A00.624Z&to=2024-08-12T18%3A29%3A00.624Z'
 ```
 
 ##### Example Response
@@ -282,7 +278,7 @@ curl -u "api_user:token" -X GET 'http://localhost:9000/api/campaigns/analytics/l
 }
 ```
 
-______________________________________________________________________
+---
 
 #### POST /api/campaigns
 
@@ -311,48 +307,50 @@ Create a new campaign.
 ##### Example request
 
 ```shell
-curl -u "api_user:token" 'http://localhost:9000/api/campaigns' -X POST -H 'Content-Type: application/json;charset=utf-8' --data-raw '{"name":"Test campaign","subject":"Hello, world","lists":[1],"from_email":"listmonk <noreply@listmonk.yoursite.com>","content_type":"richtext","messenger":"email","type":"regular","tags":["test"],"template_id":1}'
+curl -u "api_user:token" 'http://localhost:10001/api/campaigns' -X POST -H 'Content-Type: application/json;charset=utf-8' --data-raw '{"name":"Test campaign","subject":"Hello, world","lists":[1],"from_email":"listmonk <noreply@listmonk.yoursite.com>","content_type":"richtext","messenger":"email","type":"regular","tags":["test"],"template_id":1}'
 ```
 
 ##### Example response
 
 ```json
 {
-    "data": {
+  "data": {
+    "id": 1,
+    "created_at": "2021-12-27T11:50:23.333485Z",
+    "updated_at": "2021-12-27T11:50:23.333485Z",
+    "views": 0,
+    "clicks": 0,
+    "bounces": 0,
+    "lists": [
+      {
         "id": 1,
-        "created_at": "2021-12-27T11:50:23.333485Z",
-        "updated_at": "2021-12-27T11:50:23.333485Z",
-        "views": 0,
-        "clicks": 0,
-        "bounces": 0,
-        "lists": [{
-            "id": 1,
-            "name": "Default list"
-        }],
-        "started_at": null,
-        "to_send": 1,
-        "sent": 0,
-        "uuid": "90c889cc-3728-4064-bbcb-5c1c446633b3",
-        "type": "regular",
-        "name": "Test campaign",
-        "subject": "Hello, world",
-        "from_email": "listmonk \u003cnoreply@listmonk.yoursite.com\u003e",
-        "body": "",
-        "body_source": null,
-        "altbody": null,
-        "send_at": null,
-        "status": "draft",
-        "content_type": "richtext",
-        "tags": ["test"],
-        "template_id": 1,
-        "messenger": "email",
-        "headers": {},
-        "attribs": {}
-    }
+        "name": "Default list"
+      }
+    ],
+    "started_at": null,
+    "to_send": 1,
+    "sent": 0,
+    "uuid": "90c889cc-3728-4064-bbcb-5c1c446633b3",
+    "type": "regular",
+    "name": "Test campaign",
+    "subject": "Hello, world",
+    "from_email": "listmonk \u003cnoreply@listmonk.yoursite.com\u003e",
+    "body": "",
+    "body_source": null,
+    "altbody": null,
+    "send_at": null,
+    "status": "draft",
+    "content_type": "richtext",
+    "tags": ["test"],
+    "template_id": 1,
+    "messenger": "email",
+    "headers": {},
+    "attribs": {}
+  }
 }
 ```
 
-______________________________________________________________________
+---
 
 #### POST /api/campaigns/{campaign_id}/test
 
@@ -366,7 +364,7 @@ Use the same parameters in [POST /api/campaigns](#post-apicampaigns) in addition
 | :---------- | :--------- | :------- | :------------------------------------------------- |
 | subscribers | string\[\] | Yes      | List of subscriber e-mails to send the message to. |
 
-______________________________________________________________________
+---
 
 #### PUT /api/campaigns/{campaign_id}
 
@@ -374,7 +372,7 @@ Update a campaign.
 
 > Refer to parameters from [POST /api/campaigns](#post-apicampaigns)
 
-______________________________________________________________________
+---
 
 #### PUT /api/campaigns/{campaign_id}
 
@@ -382,7 +380,7 @@ Update a specific campaign.
 
 > Refer to parameters from [POST /api/campaigns](#post-apicampaigns)
 
-______________________________________________________________________
+---
 
 #### PUT /api/campaigns/{campaign_id}/status
 
@@ -405,7 +403,7 @@ Change status of a campaign.
 ##### Example Request
 
 ```shell
-curl -u "api_user:token" -X PUT 'http://localhost:9000/api/campaigns/1/status' \
+curl -u "api_user:token" -X PUT 'http://localhost:10001/api/campaigns/1/status' \
 --header 'Content-Type: application/json' \
 --data-raw '{"status":"scheduled"}'
 ```
@@ -414,40 +412,38 @@ curl -u "api_user:token" -X PUT 'http://localhost:9000/api/campaigns/1/status' \
 
 ```json
 {
-    "data": {
+  "data": {
+    "id": 1,
+    "created_at": "2020-03-14T17:36:41.29451+01:00",
+    "updated_at": "2020-04-08T19:35:17.331867+01:00",
+    "views": 0,
+    "clicks": 0,
+    "lists": [
+      {
         "id": 1,
-        "created_at": "2020-03-14T17:36:41.29451+01:00",
-        "updated_at": "2020-04-08T19:35:17.331867+01:00",
-        "views": 0,
-        "clicks": 0,
-        "lists": [
-            {
-                "id": 1,
-                "name": "Default list"
-            }
-        ],
-        "started_at": null,
-        "to_send": 0,
-        "sent": 0,
-        "uuid": "57702beb-6fae-4355-a324-c2fd5b59a549",
-        "type": "regular",
-        "name": "Test campaign",
-        "subject": "Welcome to listmonk",
-        "from_email": "No Reply <noreply@yoursite.com>",
-        "body": "<h3>Hi {{ .Subscriber.FirstName }}!</h3>\n\t\t\tThis is a test e-mail campaign. Your second name is {{ .Subscriber.LastName }} and you are from {{ .Subscriber.Attribs.city }}.",
-        "send_at": "2020-03-15T17:36:41.293233+01:00",
-        "status": "scheduled",
-        "content_type": "richtext",
-        "tags": [
-            "test-campaign"
-        ],
-        "template_id": 1,
-        "messenger": "email"
-    }
+        "name": "Default list"
+      }
+    ],
+    "started_at": null,
+    "to_send": 0,
+    "sent": 0,
+    "uuid": "57702beb-6fae-4355-a324-c2fd5b59a549",
+    "type": "regular",
+    "name": "Test campaign",
+    "subject": "Welcome to listmonk",
+    "from_email": "No Reply <noreply@yoursite.com>",
+    "body": "<h3>Hi {{ .Subscriber.FirstName }}!</h3>\n\t\t\tThis is a test e-mail campaign. Your second name is {{ .Subscriber.LastName }} and you are from {{ .Subscriber.Attribs.city }}.",
+    "send_at": "2020-03-15T17:36:41.293233+01:00",
+    "status": "scheduled",
+    "content_type": "richtext",
+    "tags": ["test-campaign"],
+    "template_id": 1,
+    "messenger": "email"
+  }
 }
 ```
 
-______________________________________________________________________
+---
 
 #### PUT /api/campaigns/{campaign_id}/archive
 
@@ -463,13 +459,12 @@ Publish campaign to public archive.
 | archive_meta        | JSON string | No       | Optional Metadata to use in campaign message or template.Eg: name, email. |
 | archive_slug        | string      | No       | Name for page to be used in public archive URL                            |
 
-
 ##### Example Request
 
 ```shell
 
-curl -u "api_user:token" -X PUT 'http://localhost:8080/api/campaigns/33/archive' 
---header 'Content-Type: application/json' 
+curl -u "api_user:token" -X PUT 'http://localhost:8080/api/campaigns/33/archive'
+--header 'Content-Type: application/json'
 --data-raw '{"archive":true,"archive_template_id":1,"archive_meta":{},"archive_slug":"my-newsletter-old-edition"}'
 ```
 
@@ -486,7 +481,7 @@ curl -u "api_user:token" -X PUT 'http://localhost:8080/api/campaigns/33/archive'
 }
 ```
 
-______________________________________________________________________
+---
 
 #### DELETE /api/campaigns/{campaign_id}
 
@@ -501,18 +496,18 @@ Delete a campaign.
 ##### Example Request
 
 ```shell
-curl -u "api_user:token" -X DELETE 'http://localhost:9000/api/campaigns/34'
+curl -u "api_user:token" -X DELETE 'http://localhost:10001/api/campaigns/34'
 ```
 
 ##### Example Response
 
 ```json
 {
-    "data": true
+  "data": true
 }
 ```
 
-______________________________________________________________________
+---
 
 #### DELETE /api/campaigns
 
@@ -528,19 +523,19 @@ Delete multiple campaigns by IDs or by a search query.
 ##### Example Request (by IDs)
 
 ```shell
-curl -u "api_user:token" -X DELETE 'http://localhost:9000/api/campaigns?id=10&id=11&id=12'
+curl -u "api_user:token" -X DELETE 'http://localhost:10001/api/campaigns?id=10&id=11&id=12'
 ```
 
 ##### Example Request (by search query)
 
 ```shell
-curl -u "api_user:token" -X DELETE 'http://localhost:9000/api/campaigns?query=test%20campaign'
+curl -u "api_user:token" -X DELETE 'http://localhost:10001/api/campaigns?query=test%20campaign'
 ```
 
 ##### Example Response
 
 ```json
 {
-    "data": true
+  "data": true
 }
 ```

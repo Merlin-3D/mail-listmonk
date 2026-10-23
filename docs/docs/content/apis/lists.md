@@ -10,7 +10,7 @@
 | DELETE | [/api/lists/{list_id}](#delete-apilistslist_id) | Delete a list.            |
 | DELETE | [/api/lists](#delete-apilists)                  | Delete multiple lists.    |
 
-______________________________________________________________________
+---
 
 #### GET /api/lists
 
@@ -35,56 +35,54 @@ Retrieve lists.
 
 ```shell
 # Get all lists
-curl -u "api_user:token" -X GET 'http://localhost:9000/api/lists?page=1&per_page=100'
+curl -u "api_user:token" -X GET 'http://localhost:10001/api/lists?page=1&per_page=100'
 
 # Get only active lists
-curl -u "api_user:token" -X GET 'http://localhost:9000/api/lists?status=active&per_page=100'
+curl -u "api_user:token" -X GET 'http://localhost:10001/api/lists?status=active&per_page=100'
 
 # Get archived lists with minimal data
-curl -u "api_user:token" -X GET 'http://localhost:9000/api/lists?status=archived&minimal=true&per_page=all'
+curl -u "api_user:token" -X GET 'http://localhost:10001/api/lists?status=archived&minimal=true&per_page=all'
 ```
 
 ##### Example Response
 
 ```json
 {
-    "data": {
-        "results": [
-            {
-                "id": 1,
-                "created_at": "2020-02-10T23:07:16.194843+01:00",
-                "updated_at": "2020-03-06T22:32:01.118327+01:00",
-                "uuid": "ce13e971-c2ed-4069-bd0c-240e9a9f56f9",
-                "name": "Default list",
-                "type": "public",
-                "optin": "double",
-                "status": "active",
-                "tags": [
-                    "test"
-                ],
-                "subscriber_count": 2
-            },
-            {
-                "id": 2,
-                "created_at": "2020-03-04T21:12:09.555013+01:00",
-                "updated_at": "2020-03-06T22:34:46.405031+01:00",
-                "uuid": "f20a2308-dfb5-4420-a56d-ecf0618a102d",
-                "name": "get",
-                "type": "private",
-                "optin": "single",
-                "status": "active",
-                "tags": [],
-                "subscriber_count": 0
-            }
-        ],
-        "total": 5,
-        "per_page": 20,
-        "page": 1
-    }
+  "data": {
+    "results": [
+      {
+        "id": 1,
+        "created_at": "2020-02-10T23:07:16.194843+01:00",
+        "updated_at": "2020-03-06T22:32:01.118327+01:00",
+        "uuid": "ce13e971-c2ed-4069-bd0c-240e9a9f56f9",
+        "name": "Default list",
+        "type": "public",
+        "optin": "double",
+        "status": "active",
+        "tags": ["test"],
+        "subscriber_count": 2
+      },
+      {
+        "id": 2,
+        "created_at": "2020-03-04T21:12:09.555013+01:00",
+        "updated_at": "2020-03-06T22:34:46.405031+01:00",
+        "uuid": "f20a2308-dfb5-4420-a56d-ecf0618a102d",
+        "name": "get",
+        "type": "private",
+        "optin": "single",
+        "status": "active",
+        "tags": [],
+        "subscriber_count": 0
+      }
+    ],
+    "total": 5,
+    "per_page": 20,
+    "page": 1
+  }
 }
 ```
 
-______________________________________________________________________
+---
 
 #### GET /api/public/lists
 
@@ -95,7 +93,7 @@ Retrieve public lists with name and uuid to submit a subscription. This is an un
 ##### Example Request
 
 ```shell
-curl -X GET 'http://localhost:9000/api/public/lists'
+curl -X GET 'http://localhost:10001/api/public/lists'
 ```
 
 ##### Example Response
@@ -108,7 +106,8 @@ curl -X GET 'http://localhost:9000/api/public/lists'
   }
 ]
 ```
-______________________________________________________________________
+
+---
 
 #### GET /api/lists/{list_id}
 
@@ -123,29 +122,29 @@ Retrieve a specific list.
 ##### Example Request
 
 ```shell
-curl -u "api_user:token" -X GET 'http://localhost:9000/api/lists/5'
+curl -u "api_user:token" -X GET 'http://localhost:10001/api/lists/5'
 ```
 
 ##### Example Response
 
 ```json
 {
-    "data": {
-        "id": 5,
-        "created_at": "2020-03-07T06:31:06.072483+01:00",
-        "updated_at": "2020-03-07T06:31:06.072483+01:00",
-        "uuid": "1bb246ab-7417-4cef-bddc-8fc8fc941d3a",
-        "name": "Test list",
-        "type": "public",
-        "optin": "double",
-        "status": "active",
-        "tags": [],
-        "subscriber_count": 0
-    }
+  "data": {
+    "id": 5,
+    "created_at": "2020-03-07T06:31:06.072483+01:00",
+    "updated_at": "2020-03-07T06:31:06.072483+01:00",
+    "uuid": "1bb246ab-7417-4cef-bddc-8fc8fc941d3a",
+    "name": "Test list",
+    "type": "public",
+    "optin": "double",
+    "status": "active",
+    "tags": [],
+    "subscriber_count": 0
+  }
 }
 ```
 
-______________________________________________________________________
+---
 
 #### POST /api/lists
 
@@ -165,30 +164,30 @@ Create a new list.
 ##### Example Request
 
 ```shell
-curl -u "api_user:token" -X POST 'http://localhost:9000/api/lists'
+curl -u "api_user:token" -X POST 'http://localhost:10001/api/lists'
 ```
 
 ##### Example Response
 
 ```json
 {
-    "data": {
-        "id": 5,
-        "created_at": "2020-03-07T06:31:06.072483+01:00",
-        "updated_at": "2020-03-07T06:31:06.072483+01:00",
-        "uuid": "1bb246ab-7417-4cef-bddc-8fc8fc941d3a",
-        "name": "Test list",
-        "type": "public",
-        "optin": "single",
-        "status": "active",
-        "tags": [],
-        "subscriber_count": 0,
-        "description": "This is a test list"
-    }
+  "data": {
+    "id": 5,
+    "created_at": "2020-03-07T06:31:06.072483+01:00",
+    "updated_at": "2020-03-07T06:31:06.072483+01:00",
+    "uuid": "1bb246ab-7417-4cef-bddc-8fc8fc941d3a",
+    "name": "Test list",
+    "type": "public",
+    "optin": "single",
+    "status": "active",
+    "tags": [],
+    "subscriber_count": 0,
+    "description": "This is a test list"
+  }
 }
 ```
 
-______________________________________________________________________
+---
 
 #### PUT /api/lists/{list_id}
 
@@ -209,7 +208,7 @@ Update a list.
 ##### Example Request
 
 ```shell
-curl -u "api_user:token" -X PUT 'http://localhost:9000/api/lists/5' \
+curl -u "api_user:token" -X PUT 'http://localhost:10001/api/lists/5' \
 --form 'name=modified test list' \
 --form 'type=private'
 ```
@@ -218,23 +217,23 @@ curl -u "api_user:token" -X PUT 'http://localhost:9000/api/lists/5' \
 
 ```json
 {
-    "data": {
-        "id": 5,
-        "created_at": "2020-03-07T06:31:06.072483+01:00",
-        "updated_at": "2020-03-07T06:52:15.208075+01:00",
-        "uuid": "1bb246ab-7417-4cef-bddc-8fc8fc941d3a",
-        "name": "modified test list",
-        "type": "private",
-        "optin": "single",
-        "status": "active",
-        "tags": [],
-        "subscriber_count": 0,
-        "description": "This is a test list"
-    }
+  "data": {
+    "id": 5,
+    "created_at": "2020-03-07T06:31:06.072483+01:00",
+    "updated_at": "2020-03-07T06:52:15.208075+01:00",
+    "uuid": "1bb246ab-7417-4cef-bddc-8fc8fc941d3a",
+    "name": "modified test list",
+    "type": "private",
+    "optin": "single",
+    "status": "active",
+    "tags": [],
+    "subscriber_count": 0,
+    "description": "This is a test list"
+  }
 }
 ```
 
-______________________________________________________________________
+---
 
 #### DELETE /api/lists/{list_id}
 
@@ -249,18 +248,18 @@ Delete a specific list.
 ##### Example Request
 
 ```shell
-curl -u 'api_username:access_token' -X DELETE 'http://localhost:9000/api/lists/1'
+curl -u 'api_username:access_token' -X DELETE 'http://localhost:10001/api/lists/1'
 ```
 
 ##### Example Response
 
 ```json
 {
-    "data": true
+  "data": true
 }
 ```
 
-______________________________________________________________________
+---
 
 #### DELETE /api/lists
 
@@ -278,19 +277,19 @@ Delete multiple lists by IDs or by a search query.
 ##### Example Request (by IDs)
 
 ```shell
-curl -u "api_user:token" -X DELETE 'http://localhost:9000/api/lists?id=10&id=11&id=12'
+curl -u "api_user:token" -X DELETE 'http://localhost:10001/api/lists?id=10&id=11&id=12'
 ```
 
 ##### Example Request (by search query)
 
 ```shell
-curl -u "api_user:token" -X DELETE 'http://localhost:9000/api/lists?query=test%20list'
+curl -u "api_user:token" -X DELETE 'http://localhost:10001/api/lists?query=test%20list'
 ```
 
 ##### Example Response
 
 ```json
 {
-    "data": true
+  "data": true
 }
 ```
